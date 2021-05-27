@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+    <title>Components</title>
+</head>
+
+<body>
+    <script>
+        AFRAME.registerComponent('change', {
+            schema: {
+                interval: { type: 'number', default: 5000 },
+                defaultColor: { type: 'color', default: '#fff' }
+            },
+
+            init: function () {
+                var el = this.el                    //toma el elemento del tag
+                var interval = this.data.interval   //toma el intervalo que venga de la propiedad
+                var colors = ["yellow", "blue", "red", "green", "orange"]
+
+                el.setAttribute('color', colors[0]) //asigna el color inicial
+            },
+
+            update: function() {
+                var el = this.el
+                var interval = this.data.interval
+                var colors = ["yellow", "blue", "red", "green", "orange"]
+                var i = 0
+                this.colorInterval = setInterval(() => {
+                    i = (i + 1) % colors.length           //ciclo para recorrer el array de colores y volver al inicio
+                    el.setAttribute('color', colors[i])   //asigna nuevo color despues de cada intervalo
+                }, interval)
+            },
+            
+            remove: function () {    //cuando se borra o se deja de utilizar
+                var el = this.el
+                var defaultColor = this.data.defaultColor
+
+                clearInterval(this.colorInterval)
+                el.setAttribute('color', defaultColor)
+            }
+        })
+    </script>
+
+    <a-scene>
+        <a-sky color="#87CEEB"></a-sky>
+        <a-box change="defaultColor:#fff: interval:5000" rotation="100 0 45" position="0 1 -3" color="white"></a-box>
+    </a-scene>
+</body>
+
+</html>
